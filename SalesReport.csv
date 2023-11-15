@@ -1,0 +1,7 @@
+Date,Time,ID,Product,Price,Amount,Total
+
+15/11/2023,10:55:37,NZ0001,Product_name,80,1,80
+15/11/2023,10:56:09,NZ0001,Product_name,80,2,160
+15/11/2023,11:15:19,NZ0001,Product_name,80,12,960
+15/11/2023,12:36:05,NZ0001,Product_name,80,2,160
+15/11/2023,12:36:36,PL0001,Product_name,90,10,900
