@@ -38,35 +38,32 @@ typedef struct
     char year[5];
 }Date;
 
-// <============ Notification Part ============>
+// <============ Notification Part ============> DONE
 int Check_Alert(Data *Data_List, int *Item_Count);
 void Save_Alert(Data *Data_List, char (*ID_Alert)[7], int Alert_Count);
 void Print_Alert(Data *Data_List, int *Item_Count);
 void Refill(Data *Data_List, int *Item_Count);
 
-// <============ System Login Part ============>
+// <============ System Login Part ============> DONE
 void Admin_Login(Data *Data_List, int *Item_Count);
 void Admin_Menu(Data *Data_List, int *Item_Count);
 void Login_Menu(Data *Data_List, int *Item_Count);
-// <============ Create Part ============>
+
+// <============ Create Part ============> DONE
 void CreateNewBook(Data *Data_List, int *Item_Count);
 
-// <============ Read Part ============>
+// <============ Read Part ============> DONE
 void Read_Menu(Data *Data_List, int *Item_Count);
 void Read_All(Data *Data_List, int *Item_Count);
 void Read_By_ID(Data *Data_List, int *Item_Count);
 void Read_By_Category(Data *Data_List, int *Item_Count);
 void Read_By_Price(Data *Data_List, int *Item_Count);
+void Read_By_Ascending(Data *Data_List_Copy, int *Item_Count);
+void Read_By_Descending(Data *Data_List_Copy, int *Item_Count);
+int Compare_By_Price_Ascending(const void *a, const void *b);
+int Compare_By_Price_Descending(const void *a, const void *b);
 
-int Compare_By_Price_Ascending(const void *a, const void *b) {
-    return ((Data *)a)->Price - ((Data *)b)->Price;
-}
-
-int Compare_By_Price_Descending(const void *a, const void *b) {
-    return ((Data *)b)->Price - ((Data *)a)->Price;
-}
-
-// <============ Update Part ============>
+// <============ Update Part ============> DONE
 void Cashier_Menu(Data *Data_List, int *Item_Count);
 void Update_Cashier(Data *Data_List, int *Item_Count); //Update system for cashier user
 void Update_Admin_Menu(Data *Data_List, int *Item_Count);
@@ -79,99 +76,65 @@ void Write_Report(char *ID, Data *Data_List ,int amount); // Make Sales File
 Date GetDate(char *Line);
 int compareDates(Date date1, Date date2);
 
-// <============ Delete Part ============>
+// <============ Delete Part ============> DONE
 void Delete_Menu(Data *Data_List, int *Item_Count);// Delete System for admin
 void Delete_Item(Data *Data_List, int *Item_Count, char *ID);// Function to delete item
 
-// <============ SalesReport Part ============>
+// <============ SalesReport Part ============> DONE
 void SalesReport_Menu();
 void All_Report();
 void Monthly_Report();
 void Daily_Report();
-void Print_Format(char *line);
+void print_sales(char *line);
+int countDigits(int num);
 
-// <=========== Struct Management ============>
+// <=========== Struct Management ============> DONE
 void Bin2Struct(Data *Data_List, int *Item_Count);
 int get_count();
 int Get_Data_Index(char *ID, Data *Data_List);// get index of element by ID
 void Print_Data(Data *Data_List, int *Item_Count);//Print whole struct
 
-// <=========== File Management ============>
-void Check_File(char *FileName); //Chechk if File available
+// <=========== File Management ============> DONE
 void WriteData(Data *Data_List, int *Item_Count);
 void printBinaryFile();
 void CSVtoBin();
+void Check_File(char *FileName); //Chechk if File available
 
-// <=========== Input Management ============>
-void Exit();
+// <=========== Input Management & General ============> DONE
 void pressEnterToContinue();
 int isLeapYear(int year);
 int valid_date(Date date);
 int isPureNumber(char *input); // Chechk if the input is only number no contain alphabet
 int valid_ID(char *ID, Data *Data_List, int *Item_count);
-void get_line_input(char *input);
 
 
 int main() {
-    CSVtoBin();
+    // CSVtoBin();
+
     system("cls");
     Check_File(WarehouseFileName);
-    Check_File(WarehouseCSVFilename);
     Check_File(ReportFileName);
+    // Check_File(WarehouseCSVFilename);
+
     // ===== Initialization ======
     int Item_Count = get_count();
     Data Data_List[Item_Count];
     Bin2Struct(Data_List, &Item_Count);
-    WriteData(Data_List, &Item_Count);
+    WriteData(Data_List, &Item_Count); 
     // ===========================
 
-    // ===== On start Alert =====
-    // Print_Alert(Data_List, &Item_Count);
-    // pressEnterToContinue();
-    // Uncomment to see readable-binary file
-    // printBinaryFile();
 
-
+    // ====== Skip to menu =======
     Login_Menu(Data_List, &Item_Count);
     // Admin_Menu(Data_List, &Item_Count);
     // Cashier_Menu(Data_List, &Item_Count);
-    // Update_Admin_Menu(Data_List, &Item_Count);
+    // ===========================
 
-
-
-    // for(int i = 0; i < 1; i++){
-    //     printf("ID : %s\n", Data_List[i].ID);
-    //     printf("Category: %s\n", Data_List[i].Category);
-    //     printf("Name: %s\n", Data_List[i].Name);
-    //     printf("Price : %d\n", Data_List[i].Price);
-    //     printf("Amount : %d\n", Data_List[i].Amount);
-    //     printf("Note : %s\n", Data_List[i].Note);
-    //     printf("\n");
-    // }
-
-    // int i = Get_Data_Index("EX0001", Data_List);
-    // Delete_Menu(Data_List, &Item_Count);
-    // printf("%d", i);
-    // Data_List[0].Amount -= 500;
-
-    // WriteData(Data_List, &Item_Count);
-    // Bin2Struct(Data_List, &Item_Count);
-
-
-    // Monthly_Report();
-    // Daily_Report();
     pressEnterToContinue();
-    // Print_Data(Data_List, &Item_Count);
-    // printf("\nCount: %d", Item_Count);
-
     return 0;
 }
 
-// <=========== Input Management =============>
-void Exit(){
-    exit(0);
-}
-
+// <=========== Input Management & General =============>
 void pressEnterToContinue() {
     printf("Press Enter to continue...\n");
     while (getchar() != '\n');
@@ -189,10 +152,10 @@ int valid_date(Date date) {
     int year = atoi(date.year);
     int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-    if (year < 1 || month < 1 || month > 12 || day < 1 || day > daysInMonth[month - 1]) 
-        return 0;
+    if(isLeapYear(year))
+        daysInMonth[1] = 29;
 
-    if (month == 2 && day == 29 && !isLeapYear(year)) 
+    if (year < 1 || month < 1 || month > 12 || day < 1 || day > daysInMonth[month - 1]) 
         return 0;
 
     return 1; // Valid date
@@ -219,11 +182,6 @@ int valid_ID(char *ID, Data *Data_List, int *Item_count){
     return (0);
 }
 
-void get_line_input(char *input){
-    char line[200];
-    gets(line);
-    strcpy(input, line);
-}
 
 // <============ Struct Management =============>
 void Bin2Struct(Data *Data_List, int *Item_Count){
@@ -267,10 +225,12 @@ void Print_Data(Data *Data_List, int *Item_Count){
 void WriteData(Data *Data_List, int *Item_Count){
 
     FILE *temp = fopen("temp.bin", "wb");
+    Check_File("temp.bin");
 
     for(int i = 0; i < *Item_Count; i++){
         if(strcmp(Data_List[i].ID,"NULL") == 0)
             continue;
+    
         if(Data_List[i].Amount < 10)
             strcpy(Data_List[i].Note, "REFILL");
         else
@@ -328,7 +288,7 @@ void Check_File(char *FileName){
     if(Check == NULL){
         printf("Error opennign %s\nProgram Stop Execute.", FileName);
         pressEnterToContinue();
-        Exit();
+        exit(0);
     }else{
         fclose(Check);
     }
@@ -438,8 +398,7 @@ void Admin_Menu(Data *Data_List, int *Item_Count){
             printf("(5) Sales Report\n");
             printf("(6) Toggle Notification\n");
             printf("(Q) Back to main menu\n");
-            get_line_input(choice);
-            // scanf(" %s", choice);
+            scanf( " %[^\n]", choice);
 
             if(strcmp(choice, MENU_EXIT) == 0){
                 system("cls"); //clear screen before call function
@@ -495,8 +454,7 @@ void Login_Menu(Data *Data_List, int *Item_Count)
         printf("(1) Admin\n");
         printf("(2) Cashier\n");
         printf("(Q) Exit\n");
-        get_line_input(choice);
-        // scanf(" %s", choice);
+        scanf(" %[^\n]", choice);
 
         if(strcmp(choice, MENU_EXIT) == 0){
             system("cls");
@@ -507,7 +465,7 @@ void Login_Menu(Data *Data_List, int *Item_Count)
             break;
         }else if(strcmp(choice, MENU_TWO) == 0){
             system("cls"); //clear screen before call function
-            Update_Cashier(Data_List, Item_Count);
+            Cashier_Menu(Data_List, Item_Count);
             break;
         }else {
             system("cls"); //clear screen before call function
@@ -523,49 +481,149 @@ void Login_Menu(Data *Data_List, int *Item_Count)
 // <============ Create Part ============>
 void CreateNewBook(Data *Data_List, int *Item_Count)
 {
-    printf("Enter Book ID (EX0001): ");
-    scanf("%6s", Data_List[*Item_Count].ID);
+    //==============================input ID===============================
+    char CreateID[100];
+    int exist=1,length,same=0;
+    do{
+        same=0;
+        printf("(Exit Press Q)\nEnter Book ID (EX0001): \n");
+        scanf(" %[^\n]", CreateID);
+        if(strcmp(CreateID,"Q")==0){ //press Q
+            system("cls");
+            return ;
+        }
+        length = strlen(CreateID); //check first 2 char && 4 num left && length 6
+        if(length==6 && (isalpha(CreateID[0])) && (isalpha(CreateID[1])) && (isdigit(CreateID[2])) && (isdigit(CreateID[3])) && (isdigit(CreateID[4])) && (isdigit(CreateID[5])) ){
+            system("cls");
+            exist=0;
+        }
+        for(int i = 0;i <= *Item_Count;i++){ //check ID exist
+            if(strcmp(CreateID, Data_List[i].ID) == 0){
+                same=1;
+            }
+        }
+        if(exist==1){ //printf exists
+            system("cls");
+            printf("6 digits only and the first two characters must be letters,\nthe remaining four characters are numbers.\n");
+        }
+        else if(same==1){
+            system("cls");
+            printf("This ID is exist.\n");
+            exist=1;
+        }
+        else if(exist==0 && same==0){ //substitute
+            strcpy(Data_List[*Item_Count].ID, CreateID);
+            system("cls");
+        }
+    }while(exist == 1);
 
-    printf("Enter Book Name: ");
-    getchar(); // consume the newline character left in the input buffer
-    fgets(Data_List[*Item_Count].Name, sizeof(Data_List[*Item_Count].Name), stdin);
-    Data_List[*Item_Count].Name[strcspn(Data_List[*Item_Count].Name, "\n")] = '\0'; // remove the trailing newline
+    //==============================input Name===============================
+    char CreateName[200];
+    printf("Enter Name: \n");
+    scanf(" %[^\n]", CreateName);
+    strcpy(Data_List[*Item_Count].Name, CreateName);
+    system("cls");
 
-    printf("Enter Category: ");
-    scanf("%99s", Data_List[*Item_Count].Category);
+    //==============================input category===============================
+    char *Categories[10] = {"Action", "Fantasy", "Comedy", "Romance", "Sports"};
+    int correct = 0;
+    char CreateCategory[200];
+    do{
+        printf("Available Category: [Action, Fantasy, Comedy, Romance, Sports]\n");
+        printf("Enter Category: \n");
+        scanf(" %[^\n]", CreateCategory);
+        for(int i = 0; i < 5; i++){
+            if(strcmp(CreateCategory, Categories[i]) == 0){
+                strcpy(Data_List[*Item_Count].Category, CreateCategory);
+                correct = 1;
+                system("cls");
+                break;
+            }
+        }
+        if(correct == 0){
+            system("cls");
+            printf("!!! Unavailable Category !!!\n");
+        }
+    }while(correct == 0);
 
-    printf("Enter Price: ");
-    scanf("%d", &Data_List[*Item_Count].Price);
+    //=============================input price=======================
+    int again=1; 
+    char CreatePrice[100];
+    while(again){
+        printf("Enter Price: ");
+        scanf(" %[^\n]", CreatePrice);
+        CreatePrice[strcspn(CreatePrice, "\n")] = '\0';
+        if(isPureNumber(CreatePrice)){
+            if(atoi(CreatePrice)>0){
+                Data_List[*Item_Count].Price = atoi(CreatePrice);
+                again=0;
+                system("cls");
+                break;
+            }
+        }
+        system("cls");
+        printf("Wrong Input! Pls enter the positive integer\n");
+    }
 
-    printf("Enter Amount in Stock: ");
-    scanf("%d", &Data_List[*Item_Count].Amount);
-
-    // Note should be "REFILL" only
-    printf("Enter Note (should be 'REFILL'): ");
-    scanf("%6s", Data_List[*Item_Count].Note);
+    //=============================input amount=======================
+    again=1; 
+    char CreateAmount[100];
+    while(again){
+        printf("Enter Amount: ");
+        scanf(" %[^\n]", CreateAmount);
+        CreateAmount[strcspn(CreateAmount, "\n")] = '\0';
+        if(isPureNumber(CreateAmount)){
+            if(atoi(CreateAmount)>=0){
+                Data_List[*Item_Count].Amount = atoi(CreateAmount);
+                again=0;
+                system("cls");
+                break;
+            }
+        }
+        system("cls");
+        printf("Wrong Input! The Amount should >= 0\n");
+    }
+    //=============================input Note=======================
+    if(atoi(CreateAmount) < 10)
+        strcpy(Data_List[*Item_Count].Note, "REFILL");
+    else
+        strcpy(Data_List[*Item_Count].Note, "-");
 
     *Item_Count += 1; // Increment the item count
     WriteData(Data_List, Item_Count);
     printf("New book added successfully!\n");
-    system("clean");
+    pressEnterToContinue();
 }
-
 // <============ Read Part ============>
+
+void Read_All(Data *Data_List, int *Item_Count) {
+    for (int i = 0; i < *Item_Count; i++) {
+        printf("\nID: %s\n", Data_List[i].ID);
+        printf("Category: %s\n", Data_List[i].Category);
+        printf("Name: %s\n", Data_List[i].Name);
+        printf("Price: %d\n", Data_List[i].Price);
+        printf("Amount: %d\n", Data_List[i].Amount);
+        printf("Note: %s\n", Data_List[i].Note);
+    }
+
+    pressEnterToContinue();
+}
 
 void Read_Menu(Data *Data_List, int *Item_Count) {
     char choice[10];
+    int correct;
     do {
-
+        correct = 0;
         printf("\nRead Menu\n");
         printf("(1) Read by ID\n");
         printf("(2) Read by Category\n");
         printf("(3) Read by Price\n");
+        printf("(4) Read All\n");
         printf("(Q) Back to admin menu\n");
-        scanf(" %s", choice);
+        scanf(" %[^\n]", choice);
 
         if (strcmp(choice, MENU_EXIT) == 0) {
             system("cls"); //clear screen before call function
-            Admin_Menu(Data_List, Item_Count);
             return;
         } else if (strcmp(choice, MENU_ONE) == 0) {
             system("cls"); //clear screen before call function
@@ -579,94 +637,233 @@ void Read_Menu(Data *Data_List, int *Item_Count) {
             system("cls"); //clear screen before call function
             Read_By_Price(Data_List, Item_Count);
             break;
+        } else if (strcmp(choice, MENU_FOUR) == 0) {
+            system("cls"); //clear screen before call function
+            Read_All(Data_List, Item_Count);
+            break;
         } else {
             system("cls"); //clear screen before call function
             printf("\nInvalid choice. Please enter a valid option.\n"); // error input text
         }
-    } while (atoi(choice) > 3 || isPureNumber(choice) == 0);
-
-}
-
-void Read_By_ID(Data *Data_List, int *Item_Count) {
-    char ID[8];
-    printf("Enter the ID to read: ");
-    scanf("%s", ID);
-
-    int index = Get_Data_Index(ID, Data_List);
-
-    if (index != -1) {
-        printf("\nID: %s\n", Data_List[index].ID);
-        printf("Category: %s\n", Data_List[index].Category);
-        printf("Name: %s\n", Data_List[index].Name);
-        printf("Price: %d\n", Data_List[index].Price);
-        printf("Amount: %d\n", Data_List[index].Amount);
-        printf("Note: %s\n", Data_List[index].Note);
-    } else {
-        printf("Item with ID %s not found.\n", ID);
-    }
-
-    pressEnterToContinue();
+    } while(correct == 0 || atoi(choice) > 4 || isPureNumber(choice) == 0);
+    Read_Menu(Data_List, Item_Count);
 }
 
 void Read_By_Category(Data *Data_List, int *Item_Count) {
     char category[100];
     char *Categories[5] = {"Action", "Fantasy", "Comedy", "Romance", "Sports"};
     int checkTemp = 0;
-    printf("======= Please Enter the category to read =======\n");
-    printf("Available Categories : Action, Fantasy, Comedy, Romance, Sports (Case Sensitive)\n");
-    scanf("%s", category);
 
-    for (int i = 0; i < 5; ++i) {
-        if (strcmp(category, Categories[i]) == 0) {
-            checkTemp++;
-            break;
+    do {
+        printf("======= Please Enter the category to read =======\n");
+        printf("Available Categories: Action, Fantasy, Comedy, Romance, Sports (Case Sensitive)\n");
+        printf("(Q) Back to Read menu\n");
+        printf("=================================================\n");
+
+        scanf(" %[^\n]", category);
+
+        if(strcmp(category, MENU_EXIT) == 0){
+            system("cls");
+            return ;
         }
-    }
-    if(checkTemp == 0){
-        printf("Error! Please input the correct category.\n");
-    }
-    else{ 
-        printf("\nItems in Category %s:\n", category);
-        for (int i = 0; i < *Item_Count; i++) {
-            if (strcmp(category, Data_List[i].Category) == 0) {
-                printf("\nID: %s\n", Data_List[i].ID);
-                printf("Category: %s\n", Data_List[i].Category);
-                printf("Name: %s\n", Data_List[i].Name);
-                printf("Price: %d\n", Data_List[i].Price);
-                printf("Amount: %d\n", Data_List[i].Amount);
-                printf("Note: %s\n", Data_List[i].Note);
+        for (int i = 0; i < 5; ++i) {
+            if (strcmp(category, Categories[i]) == 0) {
+                checkTemp = 1;
+                break;
             }
         }
+
+        if (checkTemp == 0) {
+            system("cls");
+            puts("Error! Please input the correct category.\n");
+        }
+
+    } while (checkTemp == 0);
+
+    printf("\nItems in Category %s:\n", category);
+    for (int i = 0; i < *Item_Count; i++) {
+        if (strcmp(category, Data_List[i].Category) == 0) {
+            printf("\nID: %s\n", Data_List[i].ID);
+            printf("Category: %s\n", Data_List[i].Category);
+            printf("Name: %s\n", Data_List[i].Name);
+            printf("Price: %d\n", Data_List[i].Price);
+            printf("Amount: %d\n", Data_List[i].Amount);
+            printf("Note: %s\n", Data_List[i].Note);
+        }
+    }
+
+    pressEnterToContinue();
+}
+void Read_By_ID(Data *Data_List, int *Item_Count) {
+    char ID[8];
+    int index;
+
+    do {
+        printf("Enter the ID to read\n(or 'Q' to go back)\nID: ");
+        scanf(" %[^\n]", ID);
+
+        if (strcmp(ID, "Q") == 0) {
+            system("cls");
+            return;  // Go back to Read_Menu
+        }
+
+        if (valid_ID(ID, Data_List, Item_Count)) {
+            system("cls");
+            index = Get_Data_Index(ID, Data_List);
+            printf("ID: %s\n", Data_List[index].ID);
+            printf("Category: %s\n", Data_List[index].Category);
+            printf("Name: %s\n", Data_List[index].Name);
+            printf("Price: %d\n", Data_List[index].Price);
+            printf("Amount: %d\n", Data_List[index].Amount);
+            printf("Note: %s\n", Data_List[index].Note);
+        } else {
+            system("cls");
+            printf("Item with ID %s not found. Please try again.\n", ID);
+            index = -1;  // Reset index to force the loop to continue
+        }
+
+    } while (index == -1);
+    pressEnterToContinue();
+    system("cls");
+}
+
+void Read_By_Price(Data *Data_List, int *Item_Count){
+    char choice[10];
+
+    Data Copy_Data_List[*Item_Count];
+    for (int i = 0; i < *Item_Count; i++)
+        Copy_Data_List[i] = Data_List[i];
+
+    do {
+        printf("\nRead By Price Menu\n");
+        printf("(1) Ascending\n");
+        printf("(2) Descending\n");
+        printf("(Q) Back to read menu\n");
+        scanf(" %[^\n]", choice);
+
+        if (strcmp(choice, MENU_EXIT) == 0) {
+            system("cls");
+            return;
+        } else if (strcmp(choice, MENU_ONE) == 0) {
+            system("cls");
+            Read_By_Ascending(Copy_Data_List, Item_Count);
+        } else if (strcmp(choice, MENU_TWO) == 0) {
+            system("cls");
+            Read_By_Descending(Copy_Data_List, Item_Count);
+        } else {
+            system("cls");
+            printf("Invalid choice. Please enter a valid option.\n");
+        }
+    } while (1);
+}
+
+void Read_By_Ascending(Data *Data_List_Copy, int *Item_Count){
+    char min[10];
+    char max[10];
+
+    do {
+        printf("======= Please enter a valid value. =======\n");
+        printf("(Q) Back to read by price menu\n");
+        printf("Enter the minimum price: ");
+        scanf(" %[^\n]", min);
+        if (strcmp(min, MENU_EXIT) == 0) {
+            system("cls");
+            return;
+        }
+
+        printf("Enter the maximum price: ");
+        scanf(" %[^\n]", max);
+        if (strcmp(max, MENU_EXIT) == 0) {
+            system("cls");
+            return;
+        }
+
+        if(isPureNumber(min) == 0 || isPureNumber(max) == 0 || atoi(min) < 0 || atoi(max) > 1000 || atoi(min) > atoi(max)){
+            system("cls");
+            printf("!!! Error Input! Please try again !!!\n");
+        }
+    }while(isPureNumber(min) == 0 || isPureNumber(max) == 0 || atoi(min) < 0 || atoi(max) > 1000 || atoi(min) > atoi(max));
+
+    printf("\nItems with Price between %s and %s:\n", min, max);
+    qsort(Data_List_Copy, *Item_Count, sizeof(Data), Compare_By_Price_Ascending);
+    int itemsFound = 0; // Flag to check if any items are found
+
+    for (int i = 0; i < *Item_Count; i++) {
+        if (Data_List_Copy[i].Price >= atoi(min) && Data_List_Copy[i].Price <= atoi(max)) {
+            printf("%s        %s        %s         %d          %d         %s\n", Data_List_Copy[i].ID, Data_List_Copy[i].Category, Data_List_Copy[i].Name, Data_List_Copy[i].Price, Data_List_Copy[i].Amount, Data_List_Copy[i].Note);
+            itemsFound = 1;  // Set the flag since an item is found
+        }
+    }
+
+    if (!itemsFound) {
+        system("cls");
+        printf("No items found in the specified price range.\n");
     }
     pressEnterToContinue();
 }
 
-void printData(Data *Data_List, int index) {
-    printf("\nID: %s\n", Data_List[index].ID);
-    printf("Category: %s\n", Data_List[index].Category);
-    printf("Name: %s\n", Data_List[index].Name);
-    printf("Price: %d\n", Data_List[index].Price);
-    printf("Amount: %d\n", Data_List[index].Amount);
-    printf("Note: %s\n", Data_List[index].Note);
+void Read_By_Descending(Data *Data_List_Copy, int *Item_Count){
+    char min[10];
+    char max[10];
+
+    do {
+        printf("======= Please enter a valid value. =======\n");
+        printf("(Q) Back to read by price menu\n");
+        printf("Enter the maximum price: ");
+        scanf(" %[^\n]", max);
+        if (strcmp(max, MENU_EXIT) == 0) {
+            system("cls");
+            return;
+        }
+
+        printf("Enter the minimum price: ");
+        scanf(" %[^\n]", min);
+        if (strcmp(min, MENU_EXIT) == 0) {
+            system("cls");
+            return;
+        }
+
+        if(isPureNumber(min) == 0 || isPureNumber(max) == 0 || atoi(min) < 0 || atoi(max) > 1000 || atoi(min) > atoi(max)){
+            system("cls");
+            printf("!!! Error Input! Please try again !!!\n");
+        }
+    }while(isPureNumber(min) == 0 || isPureNumber(max) == 0 || atoi(min) < 0 || atoi(max) > 1000 || atoi(min) > atoi(max));
+    
+    printf("\nItems with Price between %s and %s:\n", min, max);
+    qsort(Data_List_Copy, *Item_Count, sizeof(Data), Compare_By_Price_Descending);
+    int itemsFound = 0; // Flag to check if any items are found
+
+    for (int i = 0; i < *Item_Count; i++) {
+        if (Data_List_Copy[i].Price >= atoi(min) && Data_List_Copy[i].Price <= atoi(max)) {
+            itemsFound = 1;  // Set the flag since an item is found
+            printf("%s        %s        %s         %d          %d         %s\n", Data_List_Copy[i].ID, Data_List_Copy[i].Category, Data_List_Copy[i].Name, Data_List_Copy[i].Price, Data_List_Copy[i].Amount, Data_List_Copy[i].Note);
+        }
+    }
+    
+    if (!itemsFound) {
+        system("cls");
+        printf("No items found in the specified price range.\n");
+    }
+    pressEnterToContinue();
 }
 
-void Read_By_Price(Data *Data_List, int *Item_Count) {
+int Compare_By_Price_Ascending(const void *a, const void *b) {
+    return ((Data *)a)->Price - ((Data *)b)->Price;
+}
 
-    Data Copy_Data_List[*Item_Count];
-    for(int i = 0; i < *Item_Count; i++)
-        Copy_Data_List[i] = Data_List[i];
-
+int Compare_By_Price_Descending(const void *a, const void *b) {
+    return ((Data *)b)->Price - ((Data *)a)->Price;
 }
 
 // <============ Update Part ============>
 void Cashier_Menu(Data *Data_List, int *Item_Count){
     char choice[10];
-
-    system("cls");
+    int correct;
     Check_File(WarehouseFileName);
-    // Check_File(ReportFileName);
+    Check_File(ReportFileName);
 
     do{
+        correct = 0;
         printf("========================\n");
         printf("Hello, Cashier\n");
         printf("Choose your menu \n\n");
@@ -674,8 +871,8 @@ void Cashier_Menu(Data *Data_List, int *Item_Count){
         printf("Q. Return to menu\n");
         printf("========================\n\n");
         printf("Your choice: ");
+        scanf(" %[^\n]", choice);
 
-        scanf(" %s", choice);
         if(strcmp(choice, MENU_ONE) == 0){
             system("cls"); //clear screen before call function
             Update_Cashier(Data_List, Item_Count);
@@ -687,7 +884,7 @@ void Cashier_Menu(Data *Data_List, int *Item_Count){
             system("cls");
             printf("!!! Invalid Choice. Please Enter Again !!!\n");
         }
-    }while (isPureNumber(choice) == 0 || atoi(choice) > 1);
+    }while (correct == 0 || isPureNumber(choice) == 0 || atoi(choice) > 1);
 
     system("cls");
 }
@@ -701,9 +898,10 @@ void Update_Cashier(Data *Data_List, int *Item_Count)
     int amount;
     do{
         printf("How many books to sell\n(Back to menu press Q)\nAmount: ");
-        scanf(" %s", sell_item_count_a);
+        scanf(" %[^\n]", sell_item_count_a);
 
         if(strcmp(MENU_EXIT,sell_item_count_a) == 0){
+            system("cls");
             Cashier_Menu(Data_List, Item_Count);
             return;
         }
@@ -739,7 +937,7 @@ void Update_Cashier(Data *Data_List, int *Item_Count)
         //Check ID
         do{
             printf("Input item %d's ID to sell\n(Back to menu press Q)\nID: ", i+1);
-            scanf(" %s", ID_modify);
+            scanf(" %[^\n]", ID_modify);
 
             if(strcmp(ID_modify, MENU_EXIT) == 0){
                 system("cls");
@@ -762,7 +960,7 @@ void Update_Cashier(Data *Data_List, int *Item_Count)
         if(Data_List[index].Amount > 0){
             do{
                 printf("Input Amount of Book \"%s\" to sell (%d left)\n(Back to menu press Q)\nAmount: ",  Data_List[index].Name, Data_List[index].Amount);
-                scanf(" %s", amount_a);
+                scanf(" %[^\n]", amount_a);
 
                 if(strcmp(MENU_EXIT,amount_a) == 0){
                     Cashier_Menu(Data_List,Item_Count);
@@ -833,7 +1031,7 @@ void Update_Admin_Menu(Data *Data_List, int *Item_Count){
         printf("Input ID you want to Update(Exit Press Q)\n\n");
         printf("========================\n\n");
         printf("ID: ");
-        scanf(" %s", ID_Modify);
+        scanf(" %[^\n]", ID_Modify);
         if(strcmp(ID_Modify, MENU_EXIT) == 0){
             system("cls");
             return;
@@ -849,13 +1047,14 @@ void Update_Admin_Menu(Data *Data_List, int *Item_Count){
 
 void Update_Admin(char *ID_Modify, Data *Data_List, int *Item_Count){
     system("cls");
+    int correct;
     while (1)
     {
+        correct = 0;
         int index = Get_Data_Index(ID_Modify, Data_List);
         char choice[10];
 
         do{
-            system("cls");
             printf("========================\n");
             printf("ID: %s\n", Data_List[index].ID);
             printf("Name: %s\n", Data_List[index].Name);
@@ -872,30 +1071,36 @@ void Update_Admin(char *ID_Modify, Data *Data_List, int *Item_Count){
             printf("========================\n\n");
             printf("Your choice: ");
 
-            scanf(" %s", choice);
+            scanf(" %[^\n]", choice);
             if(strcmp(choice, MENU_EXIT) == 0){
                 system("cls");
                 Update_Admin_Menu(Data_List, Item_Count);
                 return ;
             }
-            else if(atoi(choice) > 0 && atoi(choice) < 5){
+            else if(strcmp(choice, MENU_ONE) == 0){
+                system("cls");
+                Update_Name(ID_Modify, Data_List, Item_Count);
+                break;
+            }
+            else if(strcmp(choice, MENU_TWO) == 0){
+                system("cls");
+                Update_Category(ID_Modify, Data_List, Item_Count);
+                break;
+            }
+            else if(strcmp(choice, MENU_THREE) == 0){
+                system("cls");
+                Update_Price(ID_Modify, Data_List, Item_Count);
+                break;
+            }
+            else if(strcmp(choice, MENU_FOUR) == 0){
+                system("cls");
+                Update_Amount(ID_Modify, Data_List, Item_Count);
                 break;
             }else{
                 system("cls");
-                printf("!!! Invalid input. Please enter the valid choice !!!");
+                printf("!!! Invalid input. Please enter the valid choice !!!\n");
             }
-            
-        }while(atoi(choice) > 4 || isPureNumber(choice) == 0);
-
-
-        if(strcmp(choice, MENU_ONE) == 0)
-            Update_Name(ID_Modify, Data_List, Item_Count);
-        else if(strcmp(choice, MENU_TWO) == 0)
-            Update_Category(ID_Modify, Data_List, Item_Count);
-        else if(strcmp(choice, MENU_THREE) == 0)
-            Update_Price(ID_Modify, Data_List, Item_Count);
-        else if(strcmp(choice, MENU_FOUR) == 0)
-            Update_Amount(ID_Modify, Data_List, Item_Count);
+        }while(correct == 0 || atoi(choice) > 4 || isPureNumber(choice) == 0);
     }
 }
 
@@ -905,19 +1110,23 @@ void Update_Name(char *ID, Data *Data_List, int *Item_Count){
     char temp[100];
     system("cls");
     printf("========================\n");
-    printf("ID: %s Old Name: %s\n(Return to previous page press Q)\n", ID, Data_List[index].Name);
+    printf("ID: %s Old Name: %s\n", ID, Data_List[index].Name);
+    printf("(Q) Back to Update menu\n");
     printf("========================\n\n");
     printf("New Name: ");
-    getchar();
-    fgets(temp, sizeof(temp), stdin);
-    temp[strlen(temp) - 1] = '\0';
-    if( strcmp(temp, MENU_EXIT) == 0){
+    scanf(" %[^\n]", temp);
+
+    if( strcmp(temp, MENU_EXIT) == 0){{
+        system("cls");
         return;
+    }
     }else{
-        strcpy(Data_List[index].Name,temp);
+        strcpy(Data_List[index].Name, temp);
     }
 
     WriteData(Data_List, Item_Count);
+    printf("Updated!");
+    pressEnterToContinue();
 }
 
 void Update_Category(char *ID, Data *Data_List, int *Item_Count){
@@ -933,12 +1142,15 @@ void Update_Category(char *ID, Data *Data_List, int *Item_Count){
         printf("========================\n");
         printf("ID: %s Old Category: %s\n", ID, Data_List[index].Category);
         printf("Available Category: [Action, Fantasy, Comedy, Romance, Sports]\n");
+        printf("(Q) Back to Update menu\n");
         printf("========================\n\n");
         printf("New Category: ");
-        scanf(" %s", temp);
+        scanf(" %[^\n]", temp);
 
-        if(strcmp(temp, "Q") == 0)
+        if(strcmp(temp, "Q") == 0){
+            system("cls");
             return;
+        }
 
         for(int i = 0; i < 5; i++){
             if(strcmp(temp, Categories[i]) == 0){
@@ -954,6 +1166,8 @@ void Update_Category(char *ID, Data *Data_List, int *Item_Count){
     }while(correct == 0);
 
     WriteData(Data_List, Item_Count);
+    printf("Updated!\n");
+    pressEnterToContinue();
 }  
 
 void Update_Price(char *ID, Data *Data_List, int *Item_Count){
@@ -965,14 +1179,17 @@ void Update_Price(char *ID, Data *Data_List, int *Item_Count){
     do{
         printf("========================\n");
         printf("ID: %s Old Price: %d\n", ID, Data_List[index].Price);
+        printf("(Q) Back to Update menu\n");
         printf("========================\n\n");
         printf("New Price: ");
-        scanf(" %s", temp);
+        scanf(" %[^\n]", temp);
 
-        if(strcmp(temp, "Q") == 0)
+        if(strcmp(temp, "Q") == 0){
+            system("cls");
             return;
+        }
 
-        if(isPureNumber(temp) && atoi(temp) >= 0){
+        if(isPureNumber(temp) && atoi(temp) > 0){
             Data_List[index].Price = atoi(temp);
 
         }else{
@@ -982,6 +1199,8 @@ void Update_Price(char *ID, Data *Data_List, int *Item_Count){
     }while(isPureNumber(temp) == 0 || atoi(temp) < 0);
 
     WriteData(Data_List, Item_Count);
+    printf("Updated!\n");
+    pressEnterToContinue();
 }
 
 void Update_Amount(char *ID, Data *Data_List, int *Item_Count){
@@ -993,12 +1212,15 @@ void Update_Amount(char *ID, Data *Data_List, int *Item_Count){
     do{
         printf("========================\n");
         printf("ID: %s Old Amount: %d\n", ID, Data_List[index].Amount);
+        printf("(Q) Back to admin menu\n");
         printf("========================\n\n");
         printf("New Amount: ");
-        scanf(" %s", temp);
+        scanf(" %[^\n]", temp);
 
-        if(strcmp(temp, "Q") == 0)
+        if(strcmp(temp, "Q") == 0){
+            system("cls");
             return;
+        }
 
         if(isPureNumber(temp) && atoi(temp) >= 0){
             Data_List[index].Amount = atoi(temp);
@@ -1014,6 +1236,8 @@ void Update_Amount(char *ID, Data *Data_List, int *Item_Count){
     }while(isPureNumber(temp) == 0 || atoi(temp) < 0);
 
     WriteData(Data_List, Item_Count);
+    printf("Updated!\n");
+    pressEnterToContinue();
 }
 
 void Write_Report(char *ID, Data *Data_List ,int amount){
@@ -1087,7 +1311,7 @@ void Write_Report(char *ID, Data *Data_List ,int amount){
         fprintf(tempSale, "Total,,,,,%.2lf,%.2lf\n\n", sum_amount, sum);
 
         fprintf(tempSale,"%02d/%02d/%d,%02d:%02d:%02d,%s,%s,%d,%d,%d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec,ID, Data_List[index].Name , Data_List[index].Price, amount, amount * Data_List[index].Price);
-        fprintf(tempSale, "Total,,,,,%d,%.2lf\n\n", amount, amount * Data_List[index].Price);
+        fprintf(tempSale, "Total,,,,,%d,%.2d\n\n", amount, amount * Data_List[index].Price);
     }
 
 
@@ -1164,7 +1388,7 @@ void Delete_Menu(Data *Data_List, int *Item_Count){
         printf("Input ID you want to Delete(Exit Press Q)\n\n");
         printf("========================\n\n");
         printf("ID: ");
-        scanf(" %s", ID_Modify);
+        scanf(" %[^\n]", ID_Modify);
         if(strcmp(ID_Modify, MENU_EXIT) == 0){
             system("cls");
             //goto admin menu
@@ -1196,7 +1420,7 @@ void Delete_Menu(Data *Data_List, int *Item_Count){
 
     do{
         printf("[Y/n]: ");
-        scanf(" %s", choice);
+        scanf(" %[^\n]", choice);
 
         if(strcmp(choice, MENU_EXIT) == 0){
             Delete_Menu(Data_List, Item_Count);
@@ -1243,13 +1467,15 @@ void Delete_Item(Data *Data_List, int *Item_Count, char *ID){
 
 
 // <============ Sales Report Part ============>
-void SalesReport_Menu(){
+void SalesReport_Menu()
+{
 
     char choice[10];
 
     Check_File(ReportFileName);
 
-    do{
+    do
+    {
         printf("========================\n");
         printf("Hello, Cashier\n");
         printf("Choose your menu \n\n");
@@ -1261,105 +1487,89 @@ void SalesReport_Menu(){
         printf("Your choice: ");
 
         scanf(" %s", choice);
-        if(strcmp(choice, "Q") == 0){
+        if (strcmp(choice, "Q") == 0)
+        {
             system("cls");
-            return ;
-        }else if(strcmp(choice, MENU_ONE) == 0){
+            return;
+        }
+        else if (strcmp(choice, MENU_ONE) == 0)
+        {
             system("cls");
             All_Report();
             break;
-        }else if(strcmp(choice, MENU_TWO) == 0){
+        }
+        else if (strcmp(choice, MENU_TWO) == 0)
+        {
             system("cls");
             Daily_Report();
             break;
-        }else if(strcmp(choice, MENU_THREE) == 0){
+        }
+        else if (strcmp(choice, MENU_THREE) == 0)
+        {
             system("cls");
             Monthly_Report();
             break;
         }
-        else{
+        else
+        {
             system("cls");
-            printf("!!! Invalid Choice. Please Enter Again !!!\n");
+            printf(" \033[1;31m!!! Invalid Choice. Please Enter Again !!!\n");
         }
-    }while (isPureNumber(choice) == 0 || atoi(choice) == 0 || atoi(choice) > 3);
+    } while (isPureNumber(choice) == 0 || atoi(choice) == 0 || atoi(choice) > 3);
     SalesReport_Menu();
 }
 
-void All_Report(){
-    FILE* report = fopen(ReportFileName, "r");
+void All_Report()
+{
+    FILE *report = fopen(ReportFileName, "r");
     char line[256];
-    while (fgets(line, sizeof(line), report))
-        Print_Format(line);
-    pressEnterToContinue();
+    fgets(line, sizeof(line), report);
+    printf("DATE%*cTIME%*cID%*cNAME%*cPRICE%*cAMOUNT%*cTOTAl\n\n",11,' ', 11, ' ', 8, ' ', 46, ' ',5, ' ', 4, ' ');
+
+    char amount[256];
+
+    while (fgets(line, sizeof(line), report)){
+        if(strncmp(line, "Total", 5) == 0)
+        {
+            printf("%s%*c", strtok(line, ","), 95, ' ');
+            strcpy(amount, strtok(NULL, ","));
+            printf("%s%*c", amount , 7 - countDigits(atoi(amount)) ,' ');
+            printf("%s\n\n", strtok(NULL, ","));
+        }else if(line[2] == '/'){
+            print_sales(line);
+        }else{
+            continue;
+        }
+    }
     fclose(report);
+    pressEnterToContinue();
+    system("cls");
 }
 
-void Monthly_Report(){
-    char month[20];
-    char year[20];
-
+void Monthly_Report()
+{    
     Date date;
     strcpy(date.day, "1");
 
-    do{
+    do
+    {
         printf("Input Date (Format: MM YYYY)\nDate: ");
         scanf("%s %s", date.month, date.year);
-        if(!valid_date(date) || !isPureNumber(date.month) || !isPureNumber(date.year)){
+        if(strcmp(date.month, MENU_EXIT) == 0){
+            system("cls");
+            return ;
+        }
+
+        if (!valid_date(date) || !isPureNumber(date.month) || !isPureNumber(date.year))
+        {
             system("cls");
             printf("!!! Invalid Date, Input Again !!!\n");
-        }else{
+        }
+        else
+        {
             break;
         }
-    }while(!valid_date(date) || !isPureNumber(date.month) || !isPureNumber(date.year));
-
-    system("clear");
-
-    Check_File(ReportFileName);
-    int count = 0;
-    FILE *report = fopen(ReportFileName, "r");
-
-    char line[256];
-    char temp[256];
-    //skip column name
-    fgets(line, sizeof(line), report);
-    Print_Format(line);
-
-    while(fgets(line, sizeof(line), report)){
-        strcpy(temp, line);
-        Date cur_date = GetDate(temp);
-
-        // printf("cur.date: %d %d Bool:%d \n", cur_date.month, cur_date.year, strcmp(cur_date.month, month) == 0);
-        if(strcmp(cur_date.month, date.month) == 0 && strcmp(cur_date.year, date.year) == 0){
-            Print_Format(line);
-            // printf("%s\n", line);
-            count++;
-        }
-    }
-    if(!count)
-        printf("Date: %s/ %s has no sales Record\n", date.month, date.year);
-    fclose(report);
-    pressEnterToContinue();
-}
-
-void Daily_Report(){
-    char day[20];
-    char month[20];
-    char year[20];
-
-
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    Date date;
-    do{
-        printf("Input Date (Format: DD MM YYYY)\nDate: ");
-        scanf("%s %s %s", date.day, date.month, date.year);
-        if(!valid_date(date) || !isPureNumber(date.day) || !isPureNumber(date.month) || !isPureNumber(date.year)){
-            system("cls");
-            printf("!!! Invalid Date, Input Again !!!\n");
-        }else{
-            break;
-        }
-    }while(!valid_date(date) || isPureNumber(date.day) || !isPureNumber(date.month) || !isPureNumber(date.year));
+    } while (!valid_date(date) || !isPureNumber(date.month) || !isPureNumber(date.year));
 
     system("cls");
 
@@ -1369,34 +1579,125 @@ void Daily_Report(){
 
     char line[256];
     char temp[256];
-    //skip column name
-    fgets(line, sizeof(line), report);
-    Print_Format(line);
+    int amount, sum_amount = 0;
+    int total, sum_total = 0;
 
-    while(fgets(line, sizeof(line), report)){
+    // skip column name
+    fgets(line, sizeof(line), report);
+    printf("DATE%*cTIME%*cID%*cNAME%*cPRICE%*cAMOUNT%*cTOTAl\n\n",11,' ', 11, ' ', 8, ' ', 46, ' ',5, ' ', 4, ' ');
+
+    while (fgets(line, sizeof(line), report))
+    {
         strcpy(temp, line);
         Date cur_date = GetDate(temp);
 
-        // printf("cur.date: %d %d Bool:%d \n", cur_date.month, cur_date.year, strcmp(cur_date.month, month) == 0);
-        if(strcmp(cur_date.day, date.day) == 0 && strcmp(cur_date.month, date.month) == 0 && strcmp(cur_date.year, date.year) == 0){
-            Print_Format(line);
+        if (strcmp(cur_date.month, date.month) == 0 && strcmp(cur_date.year, date.year) == 0)
+        {
+            sscanf(line, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%d,%d",&amount, &total);
+            sum_amount += amount;
+            sum_total += total;
+            print_sales(line);
             count++;
         }
     }
-
-    if(!count)
-        printf("Date: %s/ %s/ %s has no sales Record\n", date.day, date.month, date.year);
+    if (!count){
+        system("cls");
+        printf("Date: %s/ %s has no sales Record\n", date.month, date.year);
+    }else{
+        printf("TOTAL%*c", 95, ' ');
+        printf("%d%*c", sum_amount , 10 - countDigits(sum_amount) ,' ');
+        printf("%d\n\n", sum_total);       
+    }
     fclose(report);
     pressEnterToContinue();
 }
 
-void Print_Format(char *line){
-    while(*line){
-        if(*line == ','){
-            printf("%-*c", 5, ' ');
-        }else
-            printf("%c", *line);
-        line++;
+void Daily_Report()
+{
+    Date date;
+    do
+    {
+        printf("Input Date (Format: DD MM YYYY)\nDate: ");
+        scanf("%s %s %s", date.day, date.month, date.year);
+        if (!valid_date(date) || !isPureNumber(date.day) || !isPureNumber(date.month) || !isPureNumber(date.year))
+        {
+            system("cls");
+            printf("!!! Invalid Date, Input Again !!!\n");
+        }
+        else
+        {
+            break;
+        }
+    } while (!valid_date(date) || isPureNumber(date.day) || !isPureNumber(date.month) || !isPureNumber(date.year));
+
+    system("cls");
+
+    Check_File(ReportFileName);
+    int count = 0;
+    FILE *report = fopen(ReportFileName, "r");
+
+    char line[256];
+    char temp[256];
+    // skip column name
+    fgets(line, sizeof(line), report);
+    int amount, sum_amount = 0;
+    int total, sum_total = 0;
+
+    printf("DATE%*cTIME%*cID%*cNAME%*cPRICE%*cAMOUNT%*cTOTAl\n\n",11,' ', 11, ' ', 8, ' ', 46, ' ',5, ' ', 4, ' ');
+    while (fgets(line, sizeof(line), report))
+    {
+        strcpy(temp, line);
+        Date cur_date = GetDate(temp);
+        if (strcmp(cur_date.day, date.day) == 0 && strcmp(cur_date.month, date.month) == 0 && strcmp(cur_date.year, date.year) == 0)
+        {
+            sscanf(line, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%d,%d",&amount, &total);
+            sum_amount += amount;
+            sum_total += total;
+            print_sales(line);
+            count++;
+        }
     }
-    printf("\n");
+
+    if (!count){
+        system("cls");
+        printf("Date: %s/ %s/ %s has no sales Record\n", date.day, date.month, date.year);
+    }else{
+        printf("TOTAL%*c", 95, ' ');
+        printf("%d%*c", sum_amount , 10 - countDigits(sum_amount) ,' ');
+        printf("%d\n\n", sum_total);
+    }
+
+    fclose(report);
+    pressEnterToContinue();
+}
+
+void print_sales(char *line){
+    char name[256];
+    char price[256];
+    char amount[256];
+    printf("%s     ", strtok(line, ","));
+    printf("%s", strtok(NULL, ","));
+    printf("%*c%s", 7, ' ', strtok(NULL, ","));
+
+    strcpy(name, strtok(NULL, ","));
+    printf("%*c%s", 4, ' ', name);
+
+    strcpy(price, strtok(NULL, ","));
+    printf("%*c%s", 50 - strlen(name), ' ', price);
+
+    strcpy(amount, strtok(NULL, ","));
+    printf("%*c%s", 10 - countDigits(atoi(price)), ' ', amount);
+
+    printf("%*c%s\n", 10 - countDigits(atoi(amount)), ' ', strtok(NULL, "\n"));
+}
+
+int countDigits(int num){
+    int count = 0;
+
+    while(num > 0){
+        count++;
+        num /= 10;
+    }
+
+    return count;
 }
